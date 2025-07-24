@@ -7,38 +7,38 @@ const port = 3000;
 app.use(cors());
 app.use(bodyParser.json());
 
-let employees = [];
+let students = [];
 
-// Get all employees
-app.get('/api/employees', (req, res) => {
-  res.json(employees);
+// Get all students
+app.get('/api/students', (req, res) => {
+  res.json(students);
 });
 
-// Add new employee
-app.post('/api/employees', (req, res) => {
-  const employee = req.body;
-  employees.push(employee);
-  res.status(201).json({ message: 'Employee added successfully' });
+// Add new student
+app.post('/api/students', (req, res) => {
+  const student = req.body;
+  students.push(student);
+  res.status(201).json({ message: 'Student added successfully' });
 });
 
-// Update employee by ID
-app.put('/api/employees/:id', (req, res) => {
+// Update student by ID
+app.put('/api/students/:id', (req, res) => {
   const id = req.params.id;
-  const updatedEmployee = req.body;
-  const index = employees.findIndex(emp => emp.empID === id);
+  const updatedStudent = req.body;
+  const index = students.findIndex(stu => stu.studentID === id);
   if (index !== -1) {
-    employees[index] = updatedEmployee;
-    res.json({ message: 'Employee updated successfully' });
+    students[index] = updatedStudent;
+    res.json({ message: 'Student updated successfully' });
   } else {
-    res.status(404).json({ message: 'Employee not found' });
+    res.status(404).json({ message: 'Student not found' });
   }
 });
 
-// Delete employee by ID
-app.delete('/api/employees/:id', (req, res) => {
+// Delete student by ID
+app.delete('/api/students/:id', (req, res) => {
   const id = req.params.id;
-  employees = employees.filter(emp => emp.empID !== id);
-  res.json({ message: 'Employee deleted successfully' });
+  students = students.filter(stu => stu.studentID !== id);
+  res.json({ message: 'Student deleted successfully' });
 });
 
 app.listen(port, () => {

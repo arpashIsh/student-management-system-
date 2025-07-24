@@ -45,16 +45,29 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>Student Management System</h1>
+    <header style="position: relative; height: 150px;">
+        <img src="../src/student/management/system/icons/front.png" alt="Front" style="position: absolute; left: 0; top: 0; height: 150px; width: auto;"/>
+        <h1 style="position: absolute; left: 200px; top: 50px; color: white; font-family: Raleway, sans-serif; font-weight: bold; font-size: 36px; text-shadow: 2px 2px 4px #000;">Student Management System</h1>
     </header>
-    <nav>
-        <button id="btnAdd">Add Student</button>
-        <button id="btnView">View Students</button>
-        <button id="btnUpdate">Update Student</button>
-        <button id="btnRemove">Remove Student</button>
+    <nav style="display: flex; justify-content: center; gap: 20px; margin: 1rem;">
+        <button id="btnAdd" style="display: flex; align-items: center; gap: 8px; background-color: black; color: white; border: none; padding: 10px 20px; font-size: 1rem; cursor: pointer; border-radius: 4px;">
+            <img src="../src/student/management/system/icons/LoginB.png" alt="Add" style="height: 20px; width: 20px;"/>
+            Add Student
+        </button>
+        <button id="btnView" style="display: flex; align-items: center; gap: 8px; background-color: black; color: white; border: none; padding: 10px 20px; font-size: 1rem; cursor: pointer; border-radius: 4px;">
+            <img src="../src/student/management/system/icons/print.png" alt="View" style="height: 20px; width: 20px;"/>
+            View Students
+        </button>
+        <button id="btnUpdate" style="display: flex; align-items: center; gap: 8px; background-color: black; color: white; border: none; padding: 10px 20px; font-size: 1rem; cursor: pointer; border-radius: 4px;">
+            <img src="../src/student/management/system/icons/home.png" alt="Update" style="height: 20px; width: 20px;"/>
+            Update Student
+        </button>
+        <button id="btnRemove" style="display: flex; align-items: center; gap: 8px; background-color: black; color: white; border: none; padding: 10px 20px; font-size: 1rem; cursor: pointer; border-radius: 4px;">
+            <img src="../src/student/management/system/icons/delete.png" alt="Remove" style="height: 20px; width: 20px;"/>
+            Remove Student
+        </button>
     </nav>
-    <main id="mainContent">
+    <main id="mainContent" style="padding: 1rem; background-color: white; border-radius: 8px; box-shadow: 0 0 10px #ccc; max-width: 900px; margin: 2rem auto;">
         <p>Welcome to the Student Management System. Use the buttons above to manage students.</p>
     </main>
     <script src="app.js"></script>
