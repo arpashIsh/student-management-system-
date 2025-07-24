@@ -1,201 +1,213 @@
-const mainContent = document.getElementById('mainContent');
+const apiBaseUrl = 'http://localhost:3000/api/students';
 
-const employees = [];
+document.addEventListener('DOMContentLoaded', () => {
+  const btnAdd = document.getElementById('btnAdd');
+  const btnView = document.getElementById('btnView');
+  const btnUpdate = document.getElementById('btnUpdate');
+  const btnRemove = document.getElementById('btnRemove');
 
-function renderAddEmployee() {
+  const mainContent = document.getElementById('mainContent');
+
+  btnAdd.addEventListener('click', () => {
     mainContent.innerHTML = `
-        <h2>Add Employee</h2>
-        <form id="addEmployeeForm">
-            <label>Name: <input type="text" id="name" required></label><br><br>
-            <label>Father's Name: <input type="text" id="fname" required></label><br><br>
-            <label>Date of Birth: <input type="date" id="dob" required></label><br><br>
-            <label>Salary: <input type="number" id="salary" required></label><br><br>
-            <label>Address: <input type="text" id="address" required></label><br><br>
-            <label>Phone: <input type="tel" id="phone" required></label><br><br>
-            <label>Email: <input type="email" id="email" required></label><br><br>
-            <label>Highest Education: <input type="text" id="education" required></label><br><br>
-            <label>Designation: <input type="text" id="designation" required></label><br><br>
-            <label>Aadhar Number: <input type="text" id="aadhar" required></label><br><br>
-            <button type="submit">Add Employee</button>
-        </form>
-        <p id="addMessage"></p>
+      <h2>Add Student</h2>
+      <form id="addStudentForm">
+        <label>Name: <input type="text" id="name" required></label><br>
+        <label>Father's Name: <input type="text" id="fname" required></label><br>
+        <label>Date of Birth: <input type="date" id="dob" required></label><br>
+        <label>Salary: <input type="number" id="salary" required></label><br>
+        <label>Address: <input type="text" id="address" required></label><br>
+        <label>Phone: <input type="text" id="phone" required></label><br>
+        <label>Email: <input type="email" id="email" required></label><br>
+        <label>Highest Education: <input type="text" id="education" required></label><br>
+        <label>Designation: <input type="text" id="designation" required></label><br>
+        <label>Aadhar Number: <input type="text" id="aadhar" required></label><br>
+        <button type="submit">Add Student</button>
+      </form>
+      <div id="message"></div>
     `;
 
-    const form = document.getElementById('addEmployeeForm');
-    const addMessage = document.getElementById('addMessage');
+    const form = document.getElementById('addStudentForm');
+    const messageDiv = document.getElementById('message');
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const newEmployee = {
-            id: Date.now().toString(),
-            name: form.name.value,
-            fname: form.fname.value,
-            dob: form.dob.value,
-            salary: form.salary.value,
-            address: form.address.value,
-            phone: form.phone.value,
-            email: form.email.value,
-            education: form.education.value,
-            designation: form.designation.value,
-            aadhar: form.aadhar.value
-        };
-        employees.push(newEmployee);
-        addMessage.textContent = "Employee added successfully!";
-        form.reset();
-    });
-}
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const student = {
+        studentID: Date.now().toString(),
+        name: document.getElementById('name').value,
+        fname: document.getElementById('fname').value,
+        dob: document.getElementById('dob').value,
+        salary: document.getElementById('salary').value,
+        address: document.getElementById('address').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        education: document.getElementById('education').value,
+        designation: document.getElementById('designation').value,
+        aadhar: document.getElementById('aadhar').value,
+      };
 
-function renderViewEmployees() {
-    if (employees.length === 0) {
-        mainContent.innerHTML = "<p>No employees to display.</p>";
-        return;
-    }
-    let html = `
-        <h2>View Employees</h2>
-        <table border="1" cellpadding="5" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Father's Name</th>
-                    <th>DOB</th>
-                    <th>Salary</th>
-                    <th>Address</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Education</th>
-                    <th>Designation</th>
-                    <th>Aadhar</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-    employees.forEach(emp => {
-        html += `
-            <tr>
-                <td>${emp.name}</td>
-                <td>${emp.fname}</td>
-                <td>${emp.dob}</td>
-                <td>${emp.salary}</td>
-                <td>${emp.address}</td>
-                <td>${emp.phone}</td>
-                <td>${emp.email}</td>
-                <td>${emp.education}</td>
-                <td>${emp.designation}</td>
-                <td>${emp.aadhar}</td>
-            </tr>
-        `;
-    });
-    html += "</tbody></table>";
-    mainContent.innerHTML = html;
-}
-
-function renderUpdateEmployee() {
-    if (employees.length === 0) {
-        mainContent.innerHTML = "<p>No employees to update.</p>";
-        return;
-    }
-    let html = `
-        <h2>Update Employee</h2>
-        <label>Select Employee:
-            <select id="selectEmployee">
-                <option value="">Select</option>
-    `;
-    employees.forEach(emp => {
-        html += `<option value="${emp.id}">${emp.name} (${emp.id})</option>`;
-    });
-    html += `
-            </select>
-        </label>
-        <div id="updateFormContainer"></div>
-    `;
-    mainContent.innerHTML = html;
-
-    const selectEmployee = document.getElementById('selectEmployee');
-    const updateFormContainer = document.getElementById('updateFormContainer');
-
-    selectEmployee.addEventListener('change', () => {
-        const empId = selectEmployee.value;
-        const emp = employees.find(e => e.id === empId);
-        if (!emp) {
-            updateFormContainer.innerHTML = "";
-            return;
-        }
-        updateFormContainer.innerHTML = `
-            <form id="updateEmployeeForm">
-                <label>Father's Name: <input type="text" id="ufname" value="${emp.fname}" required></label><br><br>
-                <label>Salary: <input type="number" id="usalary" value="${emp.salary}" required></label><br><br>
-                <label>Address: <input type="text" id="uaddress" value="${emp.address}" required></label><br><br>
-                <label>Phone: <input type="tel" id="uphone" value="${emp.phone}" required></label><br><br>
-                <label>Email: <input type="email" id="uemail" value="${emp.email}" required></label><br><br>
-                <label>Highest Education: <input type="text" id="ueducation" value="${emp.education}" required></label><br><br>
-                <label>Designation: <input type="text" id="udesignation" value="${emp.designation}" required></label><br><br>
-                <button type="submit">Update Employee</button>
-            </form>
-            <p id="updateMessage"></p>
-        `;
-
-        const updateForm = document.getElementById('updateEmployeeForm');
-        const updateMessage = document.getElementById('updateMessage');
-
-        updateForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            emp.fname = updateForm.ufname.value;
-            emp.salary = updateForm.usalary.value;
-            emp.address = updateForm.uaddress.value;
-            emp.phone = updateForm.uphone.value;
-            emp.email = updateForm.uemail.value;
-            emp.education = updateForm.ueducation.value;
-            emp.designation = updateForm.udesignation.value;
-            updateMessage.textContent = "Employee updated successfully!";
+      try {
+        const response = await fetch(apiBaseUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(student),
         });
+        const result = await response.json();
+        messageDiv.textContent = result.message;
+        form.reset();
+      } catch (error) {
+        messageDiv.textContent = 'Error adding student';
+      }
     });
-}
+  });
 
-function renderRemoveEmployee() {
-    if (employees.length === 0) {
-        mainContent.innerHTML = "<p>No employees to remove.</p>";
+  btnView.addEventListener('click', async () => {
+    mainContent.innerHTML = '<h2>View Students</h2><div id="studentList"></div>';
+    try {
+      const response = await fetch(apiBaseUrl);
+      const students = await response.json();
+      const listDiv = document.getElementById('studentList');
+      if (students.length === 0) {
+        listDiv.textContent = 'No students to display.';
         return;
+      }
+      const table = document.createElement('table');
+      const headerRow = document.createElement('tr');
+      ['ID', 'Name', 'Father\'s Name', 'DOB', 'Salary', 'Address', 'Phone', 'Email', 'Education', 'Designation', 'Aadhar'].forEach(header => {
+        const th = document.createElement('th');
+        th.textContent = header;
+        headerRow.appendChild(th);
+      });
+      table.appendChild(headerRow);
+      students.forEach(student => {
+        const row = document.createElement('tr');
+        Object.values(student).forEach(val => {
+          const td = document.createElement('td');
+          td.textContent = val;
+          row.appendChild(td);
+        });
+        table.appendChild(row);
+      });
+      listDiv.appendChild(table);
+    } catch (error) {
+      mainContent.textContent = 'Error loading students';
     }
-    let html = `
-        <h2>Remove Employee</h2>
-        <label>Select Employee:
-            <select id="removeEmployeeSelect">
-                <option value="">Select</option>
+  });
+
+  btnUpdate.addEventListener('click', () => {
+    mainContent.innerHTML = `
+      <h2>Update Student</h2>
+      <label for="updateStudentId">Student ID:</label>
+      <input type="text" id="updateStudentId" required>
+      <button id="loadStudentBtn">Load Student</button>
+      <form id="updateStudentForm" style="display:none;">
+        <label>Name: <input type="text" id="updateName" required></label><br>
+        <label>Father's Name: <input type="text" id="updateFname" required></label><br>
+        <label>Date of Birth: <input type="date" id="updateDob" required></label><br>
+        <label>Salary: <input type="number" id="updateSalary" required></label><br>
+        <label>Address: <input type="text" id="updateAddress" required></label><br>
+        <label>Phone: <input type="text" id="updatePhone" required></label><br>
+        <label>Email: <input type="email" id="updateEmail" required></label><br>
+        <label>Highest Education: <input type="text" id="updateEducation" required></label><br>
+        <label>Designation: <input type="text" id="updateDesignation" required></label><br>
+        <label>Aadhar Number: <input type="text" id="updateAadhar" required></label><br>
+        <button type="submit">Update Student</button>
+      </form>
+      <div id="updateMessage"></div>
     `;
-    employees.forEach(emp => {
-        html += `<option value="${emp.id}">${emp.name} (${emp.id})</option>`;
+
+    const loadBtn = document.getElementById('loadStudentBtn');
+    const form = document.getElementById('updateStudentForm');
+    const messageDiv = document.getElementById('updateMessage');
+
+    loadBtn.addEventListener('click', async () => {
+      const studentID = document.getElementById('updateStudentId').value;
+      if (!studentID) {
+        messageDiv.textContent = 'Please enter a Student ID';
+        return;
+      }
+      try {
+        const response = await fetch(\`\${apiBaseUrl}/\${studentID}\`);
+        if (!response.ok) {
+          messageDiv.textContent = 'Student not found';
+          form.style.display = 'none';
+          return;
+        }
+        const student = await response.json();
+        form.style.display = 'block';
+        document.getElementById('updateName').value = student.name;
+        document.getElementById('updateFname').value = student.fname;
+        document.getElementById('updateDob').value = student.dob;
+        document.getElementById('updateSalary').value = student.salary;
+        document.getElementById('updateAddress').value = student.address;
+        document.getElementById('updatePhone').value = student.phone;
+        document.getElementById('updateEmail').value = student.email;
+        document.getElementById('updateEducation').value = student.education;
+        document.getElementById('updateDesignation').value = student.designation;
+        document.getElementById('updateAadhar').value = student.aadhar;
+      } catch (error) {
+        messageDiv.textContent = 'Error loading student';
+        form.style.display = 'none';
+      }
     });
-    html += `
-            </select>
-        </label>
-        <button id="removeEmployeeBtn">Remove</button>
-        <p id="removeMessage"></p>
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const studentID = document.getElementById('updateStudentId').value;
+      const updatedStudent = {
+        studentID,
+        name: document.getElementById('updateName').value,
+        fname: document.getElementById('updateFname').value,
+        dob: document.getElementById('updateDob').value,
+        salary: document.getElementById('updateSalary').value,
+        address: document.getElementById('updateAddress').value,
+        phone: document.getElementById('updatePhone').value,
+        email: document.getElementById('updateEmail').value,
+        education: document.getElementById('updateEducation').value,
+        designation: document.getElementById('updateDesignation').value,
+        aadhar: document.getElementById('updateAadhar').value,
+      };
+      try {
+        const response = await fetch(\`\${apiBaseUrl}/\${studentID}\`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(updatedStudent),
+        });
+        const result = await response.json();
+        messageDiv.textContent = result.message;
+      } catch (error) {
+        messageDiv.textContent = 'Error updating student';
+      }
+    });
+  });
+
+  btnRemove.addEventListener('click', () => {
+    mainContent.innerHTML = `
+      <h2>Remove Student</h2>
+      <label for="removeStudentId">Student ID:</label>
+      <input type="text" id="removeStudentId" required>
+      <button id="removeStudentBtn">Remove Student</button>
+      <div id="removeMessage"></div>
     `;
-    mainContent.innerHTML = html;
 
-    const removeEmployeeSelect = document.getElementById('removeEmployeeSelect');
-    const removeEmployeeBtn = document.getElementById('removeEmployeeBtn');
-    const removeMessage = document.getElementById('removeMessage');
+    const removeBtn = document.getElementById('removeStudentBtn');
+    const messageDiv = document.getElementById('removeMessage');
 
-    removeEmployeeBtn.addEventListener('click', () => {
-        const empId = removeEmployeeSelect.value;
-        if (!empId) {
-            removeMessage.textContent = "Please select an employee to remove.";
-            return;
-        }
-        const index = employees.findIndex(e => e.id === empId);
-        if (index === -1) {
-            removeMessage.textContent = "Employee not found.";
-            return;
-        }
-        employees.splice(index, 1);
-        removeMessage.textContent = "Employee removed successfully!";
-        removeEmployeeSelect.remove(empId);
-        renderRemoveEmployee();
+    removeBtn.addEventListener('click', async () => {
+      const studentID = document.getElementById('removeStudentId').value;
+      if (!studentID) {
+        messageDiv.textContent = 'Please enter a Student ID';
+        return;
+      }
+      try {
+        const response = await fetch(\`\${apiBaseUrl}/\${studentID}\`, {
+          method: 'DELETE',
+        });
+        const result = await response.json();
+        messageDiv.textContent = result.message;
+      } catch (error) {
+        messageDiv.textContent = 'Error removing student';
+      }
     });
-}
-
-document.getElementById('btnAdd').addEventListener('click', renderAddEmployee);
-document.getElementById('btnView').addEventListener('click', renderViewEmployees);
-document.getElementById('btnUpdate').addEventListener('click', renderUpdateEmployee);
-document.getElementById('btnRemove').addEventListener('click', renderRemoveEmployee);
+  });
+});
